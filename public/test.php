@@ -63,3 +63,24 @@
 // $request->bla = 'test';
 
 // print_r( $request->all() );
+
+trait HasFactory
+{
+    public function createFactory(): string
+    {
+        return 'creating factory...';
+    }
+}
+
+class Post
+{
+    use HasFactory;
+
+    public function save(): bool
+    {
+        return true;
+    }
+}
+
+$post = new Post();
+$post->createFactory();
