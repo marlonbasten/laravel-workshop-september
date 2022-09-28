@@ -14,6 +14,17 @@
 
 <form action="{{ route('post.store') }}" method="POST">
     @csrf
+    <select name="category_id">
+        <option value="">Auswählen...</option>
+        @foreach ($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name }}</option>
+        @endforeach
+    </select><br>
+    <select name="tags[]" multiple>
+        @foreach ($tags as $tag)
+            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+        @endforeach
+    </select><br>
     <input type="text" name="title"><br>
     <textarea name="content"></textarea><br><br>
     <input type="submit" value="Post erstellen">

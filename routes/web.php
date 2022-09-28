@@ -23,4 +23,12 @@ Route::get('/', [TestController::class, 'index'])->name('index');
 //     Route::post('/', [])->name('store');
 // });
 
-Route::resource('post', PostController::class)->only(['index', 'create', 'store']);
+Route::middleware('auth')->group(function () {
+    Route::resource('post', PostController::class)->only(['index', 'create', 'store', 'destroy']);
+    Route::delete('/post/forceDelete/{post}', [PostController::class, 'forceDelete'])->name('post.forceDelete');
+    Route::put('/post/restore/{post}', [PostController::class, 'restore'])->name('post.restore');
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

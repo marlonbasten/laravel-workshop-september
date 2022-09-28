@@ -64,23 +64,61 @@
 
 // print_r( $request->all() );
 
-trait HasFactory
+//trait HasFactory
+//{
+//    public function createFactory(): string
+//    {
+//        return 'creating factory...';
+//    }
+//}
+//
+//class Post
+//{
+//    use HasFactory;
+//
+//    public function save(): bool
+//    {
+//        return true;
+//    }
+//}
+//
+//$post1 = new Post();
+//$post2 = new Post();
+//$post1->createFactory();
+
+class Singleton
 {
-    public function createFactory(): string
+    private static ?self $instance = null;
+
+    public function __construct()
     {
-        return 'creating factory...';
+    }
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    public function testFunc(): string
+    {
+        return 'Hallo!';
+    }
+
+    public static function __callStatic(string $name, array $arguments)
+    {
+        $function = $name.'Func';
+        if (!method_exists(self::class, $function)) {
+            throw new Exception();
+        }
+        return (new self())->$function();
     }
 }
 
-class Post
-{
-    use HasFactory;
+$instanz1 = Singleton::getInstance();
+$instanz1->test = 1;
+$instanz2 = Singleton::getInstance();
 
-    public function save(): bool
-    {
-        return true;
-    }
-}
-
-$post = new Post();
-$post->createFactory();
+echo $instanz2->testFunc();
