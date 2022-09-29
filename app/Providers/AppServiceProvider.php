@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\ApiHelper\ResponseHelper;
+use App\Interfaces\PostRepositoryInterface;
+use App\Repositories\PostRepository;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,7 +17,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        \App::bind('responseHelper', function () {
+            return new ResponseHelper();
+        });
+        \App::bind(PostRepositoryInterface::class, PostRepository::class);
     }
 
     /**

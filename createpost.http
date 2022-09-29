@@ -1,0 +1,19 @@
+GET http://localhost/api/user
+Accept: application/json
+Authorization: Bearer 1|1opjD7vioS3DXUzKpIsP8SwMuAbmWWahe9Ram3Vc
+
+###
+
+POST http://localhost/api/post
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer 1|1opjD7vioS3DXUzKpIsP8SwMuAbmWWahe9Ram3Vc
+
+{
+    "title": "Hallo API kacke!",
+    "content": "Es lebt",
+    "category_id": 1
+}
+
+###
+

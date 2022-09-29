@@ -15,7 +15,8 @@ class HomeController extends Controller
 
     public function index()
     {
-        Auth::guard('web')->user();
+//        $token = auth()->user()->createToken('Test 1');
+//        dd($token);
         return view('home');
     }
 }

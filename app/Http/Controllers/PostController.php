@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Interfaces\PostRepositoryInterface;
 use App\Mail\PostCreatedMail;
 use App\Models\Category;
 use App\Models\Post;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
-    public function __construct()
+    public function __construct(private PostRepositoryInterface $postRepository)
     {
         // Middleware für den kompletten Controller:
         // $this->middleware('auth');
@@ -53,15 +54,7 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        // $post = new Post($request->validated());
-        // $post->tags()->attach($request->tags);
-        // $post->save();
-
-        $post = Post::create(['user_id' => auth()->id(), ...$request->validated()]);
-        $post->tags()->syncWithoutDetaching($request->tags);
-        $post->save();
-
-        Mail::to(auth()->user()->email)->queue(new PostCreatedMail($post));
+        $this->postRepository->create($request, auth()->user());
 
         return redirect()->back()->with('message', 'Post erfolgreich erstellt!');
     }
