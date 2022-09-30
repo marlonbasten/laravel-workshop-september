@@ -4,4 +4,8 @@
     <li><a href="{{ route('post.create') }}">Post erstellen</a></li>
 </ul>
 
+@foreach($users as $user)
+    <p>{{$user->name}}</p>
+@endforeach
+
 <hr>

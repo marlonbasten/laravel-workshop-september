@@ -12,8 +12,9 @@
 
 {{ session('message') }}
 
-<form action="{{ route('post.store') }}" method="POST">
+<form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
+    <input type="file" name="thumbnail"><br>
     <select name="category_id">
         <option value="">Auswählen...</option>
         @foreach ($categories as $category)

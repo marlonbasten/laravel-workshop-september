@@ -11,6 +11,8 @@
 <ul>
     @foreach ($posts as $post)
         <li>
+            <img src="{{ config('app.url').'/storage/'.$post->image?->path }}" alt="Thumbnail" style="max-height: 75px; max-width: 75px">
+            <br>
             ID: {{ $post->id }},
             Title: {{ $post->title }},
             Category: {{ $post->category?->name ?? 'Keine' }},

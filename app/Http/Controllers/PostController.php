@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Imports\PostImport;
 use App\Interfaces\PostRepositoryInterface;
 use App\Mail\PostCreatedMail;
 use App\Models\Category;
@@ -10,7 +11,11 @@ use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PostController extends Controller
 {
@@ -23,6 +28,16 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
+        $res = Http::acceptJson()->withHeaders([
+            'Authorization' => 'Bearer 1|1opjD7vioS3DXUzKpIsP8SwMuAbmWWahe9Ram3Vc'
+        ])->post('http://localhost/api/post', [
+            'title' => 'Hallo API!',
+            'content' => 'klappt',
+            'category_id' => 1,
+        ]);
+
+        dd($res->json());
+
         // $tags = [1,3];
         // $post = Post::find(110);
 
@@ -54,6 +69,10 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+        $path = 'uploads/'.Str::uuid().'.'.$request->thumbnail->getClientOriginalExtension();
+        Storage::put($path, $request->thumbnail->getContent());
+        Excel::import(new PostImport(), $request->file('thumbnail')->store('temp'));
+
         $this->postRepository->create($request, auth()->user());
 
         return redirect()->back()->with('message', 'Post erfolgreich erstellt!');
@@ -91,6 +110,7 @@ class PostController extends Controller
     public function forceDelete($id)
     {
         $post = Post::onlyTrashed()->find($id);
+        Storage::disk('public')->delete($post->thumbnail_path);
         $post->forceDelete();
 
         return redirect()->back();
